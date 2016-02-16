@@ -47,6 +47,7 @@
 -(void)reload;
 
 -(void)setHtml_:(NSString*)content withObject:(id)property;
+-(void)enableEventsFromRemotePages:(BOOL)isEnabled;
 
 @end
 

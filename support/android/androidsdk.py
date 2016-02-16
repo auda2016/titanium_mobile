@@ -121,6 +121,13 @@ class AndroidSDK:
 	def find_platform_dir(self, api_level=-1, raise_error=True):
 		if api_level == -1:
 			api_level = self.api_level
+			
+		if 'ANDROID_PLATFORM' in os.environ:
+			platform_dir = os.environ['ANDROID_PLATFORM']
+			if os.path.exists(platform_dir):
+				self.platform_dir = platform_dir
+				print '------> Returning android platform: ' + platform_dir
+				return platform_dir    
 
 		platform_dir = self.find_dir(api_level, os.path.join('platforms', 'android-'))
 		if platform_dir is None:

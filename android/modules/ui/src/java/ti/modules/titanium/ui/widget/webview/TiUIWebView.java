@@ -73,6 +73,8 @@ public class TiUIWebView extends TiUIView
 	private reloadTypes reloadMethod = reloadTypes.DEFAULT;
 	private Object reloadData = null;
 	
+	private boolean eventsFromRemotePagesEnabled = false;
+	
 	private class TiWebView extends WebView
 	{
 		public TiWebViewClient client;
@@ -768,7 +770,7 @@ public class TiUIWebView extends TiUIView
 
 	public boolean shouldInjectBindingCode()
 	{
-		return isLocalHTML && !bindingCodeInjected;
+	        return (eventsFromRemotePagesEnabled || isLocalHTML) && !bindingCodeInjected;
 	}
 
 	public void setBindingCodeInjected(boolean injected)
@@ -779,5 +781,9 @@ public class TiUIWebView extends TiUIView
 	public boolean interceptOnBackPressed()
 	{
 		return chromeClient.interceptOnBackPressed();
+	}
+	
+	public void enableEventsFromRemotePages(boolean isEnabled) {
+	    eventsFromRemotePagesEnabled = isEnabled;
 	}
 }
