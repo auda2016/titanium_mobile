@@ -40,6 +40,7 @@ static XHRBridge *xhrBridge = nil;
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)theRequest 
 {
+    NSString *urlToString = [[theRequest URL] path];
 	NSString *theScheme = [[theRequest URL] scheme];
 	return [theScheme isEqual:[self specialProtocolScheme]] || [AppProtocolHandler getRangeOfInjectionKeyword:urlToString].location != NSNotFound;
 }
