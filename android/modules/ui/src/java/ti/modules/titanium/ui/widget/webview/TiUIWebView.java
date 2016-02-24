@@ -65,6 +65,8 @@ public class TiUIWebView extends TiUIView
 	public static final int PLUGIN_STATE_OFF = 0;
 	public static final int PLUGIN_STATE_ON = 1;
 	public static final int PLUGIN_STATE_ON_DEMAND = 2;
+	
+	private boolean eventsFromRemotePagesEnabled = false;
 
 	private static enum reloadTypes {
 		DEFAULT, DATA, HTML, URL
@@ -768,7 +770,7 @@ public class TiUIWebView extends TiUIView
 
 	public boolean shouldInjectBindingCode()
 	{
-		return isLocalHTML && !bindingCodeInjected;
+	        return (eventsFromRemotePagesEnabled || isLocalHTML) && !bindingCodeInjected;
 	}
 
 	public void setBindingCodeInjected(boolean injected)
@@ -779,5 +781,9 @@ public class TiUIWebView extends TiUIView
 	public boolean interceptOnBackPressed()
 	{
 		return chromeClient.interceptOnBackPressed();
+	}
+	
+	public void enableEventsFromRemotePages(boolean isEnabled) {
+	    eventsFromRemotePagesEnabled = isEnabled;
 	}
 }

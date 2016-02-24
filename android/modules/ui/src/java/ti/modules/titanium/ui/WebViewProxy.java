@@ -465,4 +465,10 @@ public class WebViewProxy extends ViewProxy
 	{
 		return "Ti.UI.WebView";
 	}
+	
+	@Kroll.method
+	public void enableEventsFromRemotePages(boolean isEnabled) {
+	    TiUIWebView view = (TiUIWebView) peekView();
+	    view.enableEventsFromRemotePages(isEnabled);
+	}
 }

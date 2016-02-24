@@ -166,6 +166,8 @@ Common ant tasks and macros for building Android-based Titanium modules and proj
 		<sequential>
 			<mkdir dir="@{build.dir}"/>
 			<javac destdir="@{build.dir}"
+				fork="yes"
+    			executable="${env.JAVA_HOME}/bin/javac"
 				includes="@{includes}"
 				excludes="@{excludes}"
 				target="1.6"
@@ -396,6 +398,8 @@ Common ant tasks and macros for building Android-based Titanium modules and proj
 		<property name="kroll.common.classes.dir" location="${dist.classes.dir}/kroll-common"/>
 		<mkdir dir="${kroll.common.classes.dir}"/>
 		<javac srcdir="${kroll.common.project.dir}/src/java"
+			fork="yes"
+    		executable="${env.JAVA_HOME}/bin/javac"
 			destdir="${kroll.common.classes.dir}" debug="true"
 			source="1.6" target="1.6"
 			includeantruntime="false">
@@ -410,6 +414,8 @@ Common ant tasks and macros for building Android-based Titanium modules and proj
 		<property name="kroll.v8.classes.dir" location="${dist.classes.dir}/kroll-v8"/>
 		<mkdir dir="${kroll.v8.classes.dir}"/>
 		<javac srcdir="${kroll.v8.project.dir}/src/java" destdir="${kroll.v8.classes.dir}" debug="true"
+			fork="yes"
+    		executable="${env.JAVA_HOME}/bin/javac"
 			target="1.6" source="1.6" includeantruntime="false">
 			<classpath refid="android"/>
 			<classpath>
@@ -642,6 +648,8 @@ Common ant tasks and macros for building Android-based Titanium modules and proj
 		<sequential>
 			<mkdir dir="${dist.classes.dir}/ant-tasks"/>
 			<javac srcdir="${ti.build.dir}/src"
+				fork="yes"
+    			executable="${env.JAVA_HOME}/bin/javac"
 				destdir="${dist.classes.dir}/ant-tasks"
 				includes="**/*.java"
 				classpathref="ti.build.lib.path"
