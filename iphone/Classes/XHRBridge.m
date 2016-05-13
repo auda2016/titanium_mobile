@@ -42,7 +42,16 @@ static XHRBridge *xhrBridge = nil;
 {
     NSString *urlToString = [[theRequest URL] path];
 	NSString *theScheme = [[theRequest URL] scheme];
-	return [theScheme isEqual:[self specialProtocolScheme]] || [AppProtocolHandler getRangeOfInjectionKeyword:urlToString].location != NSNotFound;
+    
+    if ([theScheme isEqual:[self specialProtocolScheme]]) {
+        return YES;
+    }
+    
+    NSRange range = [AppProtocolHandler getRangeOfInjectionKeyword:urlToString];
+    
+    // MOBCAPT-9637
+    // NOTE: for some strings (base64) there was a case where location was 0 although the keyword was not present as substring. For this purpose the length must also be different than 0.
+	return (range.location != NSNotFound && range.length != 0);
 }
 
 + (BOOL)requestIsCacheEquivalent:(NSURLRequest *)a toRequest:(NSURLRequest *)b;
@@ -133,7 +142,8 @@ static XHRBridge *xhrBridge = nil;
 	NSURL *url = [request URL];
 	
 	// check to see if this is a bridge request through a webview
-    if ([AppProtocolHandler getRangeOfInjectionKeyword:[url path]].location != NSNotFound)
+    NSRange range = [AppProtocolHandler getRangeOfInjectionKeyword:[url path]];
+    if (range.location != NSNotFound && range.length != 0)
 	{
 		[self handleAppToTiRequest];
 		return;
