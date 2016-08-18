@@ -81,6 +81,13 @@
     return (inKJSThread ? evalResult : [evalResult autorelease]);
 }
 
+- (void)enableEventsFromRemotePages:(id)args
+{
+    ENSURE_ARG_COUNT(args, 1);
+    BOOL isEnabled = [TiUtils boolValue:[args objectAtIndex:0] def:NO];
+    [(TiUIWebView*)[self view] enableEventsFromRemotePages:isEnabled];
+}
+
 USE_VIEW_FOR_CONTENT_HEIGHT
 USE_VIEW_FOR_CONTENT_WIDTH
 

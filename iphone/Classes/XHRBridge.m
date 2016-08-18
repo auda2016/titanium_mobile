@@ -33,10 +33,24 @@ static XHRBridge *xhrBridge = nil;
 	}
 }
 
++ (NSRange) getRangeOfInjectionKeyword:(NSString *)target
+{
+    return [target rangeOfString:@"_TiA0_"];
+}
+
 + (BOOL)canInitWithRequest:(NSURLRequest *)theRequest 
 {
-	NSString *theScheme = [[theRequest URL] scheme];
-	return [theScheme isEqual:[self specialProtocolScheme]];
+	NSString *urlToString = [[theRequest URL] path];
+    NSString *theScheme = [[theRequest URL] scheme];
+    if ([theScheme isEqual:[self specialProtocolScheme]]) {
+        return YES;
+    }
+     
+    NSRange range = [AppProtocolHandler getRangeOfInjectionKeyword:urlToString];
+     
+    // MOBCAPT-9637
+    // NOTE: for some strings (base64) there was a case where location was 0 although the keyword was not present as substring. For this purpose the length must also be different than 0.
+    return (range.location != NSNotFound && range.length != 0);
 }
 
 + (BOOL)requestIsCacheEquivalent:(NSURLRequest *)a toRequest:(NSURLRequest *)b;
@@ -55,7 +69,9 @@ static XHRBridge *xhrBridge = nil;
     NSURLRequest *request = [self request];
 	NSURL *url = [request URL];
 
-	NSArray *parts = [[[url path] substringFromIndex:1] componentsSeparatedByString:@"/"];
+	// at this point we are sure that the URL contains '_TiA0_'
+    NSRange range = [AppProtocolHandler getRangeOfInjectionKeyword:[url path]];
+    NSArray *parts = [[[url path] substringFromIndex:range.location] componentsSeparatedByString:@"/"];
 	NSString *pageToken = [[parts objectAtIndex:0] stringByReplacingOccurrencesOfString:@"_TiA0_" withString:@""];
 	NSString *module = [parts objectAtIndex:1];
 	NSString *method = [parts objectAtIndex:2];
@@ -125,7 +141,8 @@ static XHRBridge *xhrBridge = nil;
 	NSURL *url = [request URL];
 	
 	// check to see if this is a bridge request through a webview
-	if ([[url path] hasPrefix:@"/_TiA0_"])
+    NSRange range = [AppProtocolHandler getRangeOfInjectionKeyword:[url path]];
+    if (range.location != NSNotFound && range.length != 0)
 	{
 		[self handleAppToTiRequest];
 		return;
